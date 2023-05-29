@@ -7,15 +7,13 @@ object tweetmining {
   var pathToFile = ""
   def main(args: Array[String]) {
     if (args.length != 1) {
-      println()
       println("The argument should be path to json file containing a bunch of tweets. esired.")
       System.exit(1)
     }
     pathToFile = args(0)
-    val tweets =
-      sc.textFile(pathToFile).mapPartitions(TweetUtils.parseFromJson(_))
+    val tweets = sc.textFile(pathToFile).mapPartitions(TweetUtils.parseFromJson(_))
     val tweetsByUser = tweets.map(x => (x.user, x)).groupByKey()
-     }
+   }
     val numTweetsByUser = tweetsByUser.map(x => (x._1, x._2.size))
     val sortedUsersByNumTweets = numTweetsByUser.sortBy(_._2, ascending=false)
     sortedUsersByNumTweets.take(10).foreach(println)
